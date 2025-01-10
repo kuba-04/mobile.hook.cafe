@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mobile.hook.cafe",
-    "slug": "mobile.hook.cafe",
+    "name": "Hook Cafe",
+    "slug": "hookcafe",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -36,6 +36,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "fde80bae-9428-447a-bc4a-353c487d6c48"
+      }
     }
   }
 }
