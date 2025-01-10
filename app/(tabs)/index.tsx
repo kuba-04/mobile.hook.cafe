@@ -83,17 +83,17 @@ export default function TabOneScreen() {
       scrollEnabled={isScrollEnabled}
     >
       <View className="p-5">
-        <Text className="text-center text-2xl text-white mb-10">HOOK CAFÉ</Text>
-        <Text className="text-2xl text-white mb-8">Quick meet with friendly people around?</Text>
+        <Text className="text-center text-4xl text-white mb-10">HOOK CAFÉ</Text>
+        <Text className="text-center text-3xl text-white mb-8">Quick meet with friendly people around?</Text>
 
         <View className="mb-8">
-          <Text className="text-white mb-2">What do you want to talk about today?</Text>
-          <Text className="text-gray-400 text-sm mb-2">(only 4 words)</Text>
+          <Text className="text-white text-xl mb-2 text-center">What do you want to talk about today?</Text>
+          <Text className="text-gray-400 text-lg mb-2 text-center">Your 4 words</Text>
           <View className="flex-row justify-between gap-2">
             {[0, 1, 2, 3].map((index) => (
               <TextInput
                 key={index}
-                className="flex-1 bg-white/10 rounded-lg p-3 text-white"
+                className="flex-1 text-xl bg-white/10 rounded-lg p-3 text-white"
                 placeholder={`Word ${index + 1}`}
                 placeholderTextColor="#667"
                 value={words[index]}
@@ -108,9 +108,9 @@ export default function TabOneScreen() {
         </View>
 
         <View className="mb-8">
-          <Text className="text-white mb-2">Where can you meet?</Text>
+          <Text className="text-white text-lg mb-2 text-center">Where can you meet?</Text>
           <TextInput
-            className="w-full bg-white/10 rounded-lg p-3 text-white"
+            className="w-full text-xl bg-white/10 rounded-lg p-3 text-white"
             placeholder="Street or borough"
             placeholderTextColor="#667"
             value={location}
@@ -119,20 +119,20 @@ export default function TabOneScreen() {
         </View>
 
         <View className="mb-8">
-          <Text className="text-white mb-2">When?</Text>
+          <Text className="text-white text-lg mb-2  text-center">When?</Text>
           <View className="flex-row items-center gap-2">
             <TouchableOpacity
               className="flex-1 bg-white/10 rounded-lg p-3 items-center"
               onPress={() => showTimePicker('start')}
             >
-              <Text className="text-white">{formatTime(timeRange.start)}</Text>
+              <Text className="text-white text-xl text-base">{formatTime(timeRange.start)}</Text>
             </TouchableOpacity>
-            <Text className="text-white text-lg">-</Text>
+            <Text className="text-white text-xl">-</Text>
             <TouchableOpacity
               className="flex-1 bg-white/10 rounded-lg p-3 items-center"
               onPress={() => showTimePicker('end')}
             >
-              <Text className="text-white">{formatTime(timeRange.end)}</Text>
+              <Text className="text-white text-xl text-base">{formatTime(timeRange.end)}</Text>
             </TouchableOpacity>
           </View>
           <DateTimePickerModal
@@ -146,10 +146,10 @@ export default function TabOneScreen() {
         </View>
 
         <View className="mb-8">
-          <Text className="text-white mb-2">Your food budget:</Text>
-          <View className="flex-row justify-between mt-2">
-            <Text className="text-white">{displayBudget(budgetRange[0])}</Text>
-            <Text className="text-white">{displayBudget(budgetRange[1])}</Text>
+          <Text className="text-white text-lg text-center">Your food budget:</Text>
+          <View className="flex-row justify-around mt-2">
+            <Text className="text-white text-base">{displayBudget(budgetRange[0])}</Text>
+            <Text className="text-white text-base">{displayBudget(budgetRange[1])}</Text>
           </View>
           <View className="items-center">
             <MultiSlider
@@ -178,10 +178,10 @@ export default function TabOneScreen() {
         </View>
 
         <TouchableOpacity
-          className="bg-[#1DB3A8] rounded-lg p-3 items-center mt-5"
+          className="bg-[#1DB3A8] rounded-lg p-4 items-center mt-5"
           onPress={() => console.log('Start pressed')}
         >
-          <Text className="text-white text-base">Start</Text>
+          <Text className="text-white text-lg font-medium">Start</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
