@@ -1,7 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import Slider from '@react-native-community/slider';
 import { useState } from 'react';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function TabOneScreen() {
   const [words, setWords] = useState(['', '', '', '']);
@@ -12,15 +12,26 @@ export default function TabOneScreen() {
   });
   const [activeTimeField, setActiveTimeField] = useState<'start' | 'end' | null>(null);
   const [budget, setBudget] = useState(30);
+  const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
 
-  const handleTimeChange = (event: any, selectedDate?: Date) => {
+  const showTimePicker = (field: 'start' | 'end') => {
+    setActiveTimeField(field);
+    setTimePickerVisibility(true);
+  };
+
+  const hideTimePicker = () => {
+    setTimePickerVisibility(false);
     setActiveTimeField(null);
-    if (selectedDate) {
-      setTimeRange((prev: { start: number; end: number }) => ({
+  };
+
+  const handleConfirm = (date: Date) => {
+    if (activeTimeField) {
+      setTimeRange(prev => ({
         ...prev,
-        [activeTimeField!]: selectedDate.getTime()
+        [activeTimeField]: date.getTime()
       }));
     }
+    hideTimePicker();
   };
 
   const formatTime = (timestamp: number) => {
@@ -74,26 +85,26 @@ export default function TabOneScreen() {
           <View className="flex-row items-center gap-2">
             <TouchableOpacity
               className="flex-1 bg-white/10 rounded-lg p-3 items-center"
-              onPress={() => setActiveTimeField('start')}
+              onPress={() => showTimePicker('start')}
             >
               <Text className="text-white">{formatTime(timeRange.start)}</Text>
             </TouchableOpacity>
             <Text className="text-white text-lg">-</Text>
             <TouchableOpacity
               className="flex-1 bg-white/10 rounded-lg p-3 items-center"
-              onPress={() => setActiveTimeField('end')}
+              onPress={() => showTimePicker('end')}
             >
               <Text className="text-white">{formatTime(timeRange.end)}</Text>
             </TouchableOpacity>
           </View>
-          {activeTimeField && (
-            <DateTimePicker
-              value={new Date(activeTimeField === 'start' ? timeRange.start : timeRange.end)}
-              mode="time"
-              is24Hour={true}
-              onChange={handleTimeChange}
-            />
-          )}
+          <DateTimePickerModal
+            isVisible={isTimePickerVisible}
+            mode="time"
+            onConfirm={handleConfirm}
+            onCancel={hideTimePicker}
+            date={new Date(activeTimeField === 'start' ? timeRange.start : timeRange.end)}
+            is24Hour={true}
+          />
         </View>
 
         <View className="mb-8">
