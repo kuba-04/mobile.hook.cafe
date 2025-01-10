@@ -1,9 +1,29 @@
 import { View, Text, TextInput, TouchableOpacity, ScrollView } from 'react-native';
-import Slider from '@react-native-community/slider';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 import { useState } from 'react';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
+// Helper functions for logarithmic scale - moved to top
+const logScale = (value: number) => {
+  const minp = 5;
+  const maxp = 100;
+  const minv = Math.log(minp);
+  const maxv = Math.log(maxp);
+  const scale = (maxv - minv) / (maxp - minp);
+  return Math.exp(minv + scale * (value - minp));
+};
+
+const invertLogScale = (value: number) => {
+  const minp = 5;
+  const maxp = 100;
+  const minv = Math.log(minp);
+  const maxv = Math.log(maxp);
+  const scale = (maxv - minv) / (maxp - minp);
+  return (Math.log(value) - minv) / scale + minp;
+};
+
 export default function TabOneScreen() {
+  // State declarations
   const [words, setWords] = useState(['', '', '', '']);
   const [location, setLocation] = useState('');
   const [timeRange, setTimeRange] = useState({
@@ -11,8 +31,15 @@ export default function TabOneScreen() {
     end: new Date().setHours(14, 0, 0, 0),
   });
   const [activeTimeField, setActiveTimeField] = useState<'start' | 'end' | null>(null);
-  const [budget, setBudget] = useState(30);
+  const [budgetRange, setBudgetRange] = useState([
+    invertLogScale(20),
+    invertLogScale(40)
+  ]);
   const [isTimePickerVisible, setTimePickerVisibility] = useState(false);
+  const [isScrollEnabled, setIsScrollEnabled] = useState(true);
+
+  const enableScroll = () => setIsScrollEnabled(true);
+  const disableScroll = () => setIsScrollEnabled(false);
 
   const showTimePicker = (field: 'start' | 'end') => {
     setActiveTimeField(field);
@@ -42,8 +69,19 @@ export default function TabOneScreen() {
     });
   };
 
+  const handleBudgetChange = (values: number[]) => {
+    setBudgetRange(values);
+  };
+
+  const displayBudget = (value: number) => {
+    return Math.round(logScale(value));
+  };
+
   return (
-    <ScrollView className="flex-1 bg-[#1A1B1F] pt-10">
+    <ScrollView
+      className="flex-1 bg-[#1A1B1F] pt-10"
+      scrollEnabled={isScrollEnabled}
+    >
       <View className="p-5">
         <Text className="text-center text-2xl text-white mb-10">HOOK CAFÉ</Text>
         <Text className="text-2xl text-white mb-8">Quick meet with friendly people around?</Text>
@@ -109,19 +147,33 @@ export default function TabOneScreen() {
 
         <View className="mb-8">
           <Text className="text-white mb-2">Your food budget:</Text>
-          <Slider
-            className="w-full h-10"
-            minimumValue={20}
-            maximumValue={40}
-            value={budget}
-            onValueChange={setBudget}
-            minimumTrackTintColor="#1DB3A8"
-            maximumTrackTintColor="#ddd"
-            thumbTintColor="#1DB3A8"
-          />
           <View className="flex-row justify-between mt-2">
-            <Text className="text-white">20</Text>
-            <Text className="text-white">40</Text>
+            <Text className="text-white">{displayBudget(budgetRange[0])}</Text>
+            <Text className="text-white">{displayBudget(budgetRange[1])}</Text>
+          </View>
+          <View className="items-center">
+            <MultiSlider
+              values={budgetRange}
+              min={5}
+              max={100}
+              step={1}
+              sliderLength={280}
+              onValuesChange={handleBudgetChange}
+              onValuesChangeStart={disableScroll}
+              onValuesChangeFinish={enableScroll}
+              selectedStyle={{
+                backgroundColor: '#1DB3A8'
+              }}
+              unselectedStyle={{
+                backgroundColor: '#ddd'
+              }}
+              markerStyle={{
+                backgroundColor: '#1DB3A8',
+                height: 20,
+                width: 20,
+                borderRadius: 10
+              }}
+            />
           </View>
         </View>
 
